@@ -1,0 +1,19 @@
+.field {
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+.cells {
+    border: 1px solid grey;
+    width: 38px;
+    height: 38px;
+}
+
+.cell_color__hit {
+    background-color: rgba(38, 235, 21, 0.932);
+}
+
+.cell_color__miss {
+    background-color: rgba(194, 202, 228, 0.932);
+}
