@@ -2,6 +2,7 @@ import { FC } from "react";
 import { FIELD_SIZE, CELL_SIZE } from "./../../utils/Constants";
 import styles from "./Field.module.css";
 import classNames from "classnames";
+import { generateShips } from "../../utils/Init";
 
 interface StateCellsProp {
     [index: string]: boolean;
@@ -9,11 +10,12 @@ interface StateCellsProp {
 
 interface FieldProps {
     stateCells: StateCellsProp;
-    coordShips: Array<Array<string>>;
     onChangeField: (obj: {}) => void;
 }
 
-const Field: FC<FieldProps> = ({ stateCells, coordShips, onChangeField }) => {
+const coordShips: Array<Array<string>> = generateShips();
+
+const Field: FC<FieldProps> = ({ stateCells, onChangeField }) => {
     const generateField = () => {
         const arrItems = [];
 
