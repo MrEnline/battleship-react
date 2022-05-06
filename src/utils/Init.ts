@@ -6,15 +6,13 @@ enum LimitsCoord {
 }
 
 enum LimitsDirect {
-    Max = 4,
+    Max = 2,
     Min = 1,
 }
 
 enum DirectionGeneration {
-    right = 1,
-    bottom,
-    left,
-    top,
+    Horiz = 1,
+    Vertic,
 }
 
 export const generateShips = () => {
@@ -26,7 +24,7 @@ export const generateShips = () => {
     let coordXEndElem: number;
     let coordYEndElem: number;
     switch (directShip) {
-        case DirectionGeneration.right:
+        case DirectionGeneration.Horiz:
             coordHeadCell.x =
                 coordHeadCell.x + 2 <= FIELD_SIZE.rows
                     ? coordHeadCell.x
@@ -37,7 +35,7 @@ export const generateShips = () => {
                     : coordHeadCell.y - 1;
             shipL = getShipL(coordHeadCell, 1, 0, 0, coordYEndElem);
             break;
-        case DirectionGeneration.bottom:
+        case DirectionGeneration.Vertic:
             coordHeadCell.y =
                 coordHeadCell.y + 2 <= FIELD_SIZE.columns
                     ? coordHeadCell.y
@@ -48,28 +46,6 @@ export const generateShips = () => {
                     : coordHeadCell.x - 1;
             shipL = getShipL(coordHeadCell, 0, 1, coordXEndElem, 0);
             break;
-        case DirectionGeneration.left:
-            coordHeadCell.x =
-                coordHeadCell.x - 2 >= 1
-                    ? coordHeadCell.x
-                    : coordHeadCell.x + 2;
-            coordYEndElem =
-                coordHeadCell.y - 1 >= 1
-                    ? coordHeadCell.y - 1
-                    : coordHeadCell.y + 1;
-            shipL = getShipL(coordHeadCell, -1, 0, 0, coordYEndElem);
-            break;
-        case DirectionGeneration.top:
-            coordHeadCell.y =
-                coordHeadCell.y - 2 >= 1
-                    ? coordHeadCell.y
-                    : coordHeadCell.y - 2;
-            coordXEndElem =
-                coordHeadCell.x - 1 >= 1
-                    ? coordHeadCell.x - 1
-                    : coordHeadCell.x + 1;
-            shipL = getShipL(coordHeadCell, 0, -1, coordXEndElem, 0);
-            break;
         default:
             shipL = [];
     }
@@ -79,57 +55,95 @@ export const generateShips = () => {
         },
         [],
     );
-    let banCells = neighBorsShipL.filter((value, index) => {
-        return neighBorsShipL.indexOf(value) === index;
+    // let banCells = neighBorsShipL.filter((value, index) => {
+    //     return neighBorsShipL.indexOf(value) === index;
+    // });
+
+    let banCellsSet = new Set(neighBorsShipL);
+    let banCells: Array<string> = [];
+    shipL.forEach((value) => {
+        banCellsSet.add(value);
     });
+    banCellsSet.forEach((value) => {
+        banCells.push(value);
+    });
+    //banCells = [...shipL];
 
     let shipI: Array<string> = [];
+    coordHeadCell = generateRandomCoord();
+
+    let isGenerateCoordShipI: boolean = false;
+
+    while (!isGenerateCoordShipI) {
+        coordHeadCell = generateRandomCoord();
+        coordHeadCell.x =
+            coordHeadCell.x + 3 <= FIELD_SIZE.rows
+                ? coordHeadCell.x
+                : coordHeadCell.x - 3;
+        coordHeadCell.y =
+            coordHeadCell.y + 3 <= FIELD_SIZE.columns
+                ? coordHeadCell.y
+                : coordHeadCell.y - 3;
+        let possibleCellShipI = [
+            ...getShipI(coordHeadCell, 1, 0),
+            ...getShipI(coordHeadCell, -1, 0),
+            ...getShipI(coordHeadCell, 0, 1),
+            ...getShipI(coordHeadCell, 0, -1),
+        ];
+        possibleCellShipI = possibleCellShipI.filter((value, index) => {
+            return possibleCellShipI.indexOf(value) === index;
+        });
+        isGenerateCoordShipI = true;
+        for (let item of banCells) {
+            if (possibleCellShipI.includes(item)) {
+                isGenerateCoordShipI = false;
+                break;
+            }
+        }
+    }
+
     directShip =
         Math.floor(Math.random() * (LimitsDirect.Max - LimitsDirect.Min + 1)) +
         LimitsDirect.Min;
 
-    coordHeadCell = generateRandomCoord();
-    while (banCells.indexOf(`${coordHeadCell.y}_${coordHeadCell.x}`) !== -1) {
-        coordHeadCell = generateRandomCoord();
-    }
-
     switch (directShip) {
-        case DirectionGeneration.right:
+        case DirectionGeneration.Horiz:
             coordHeadCell.x =
                 coordHeadCell.x + 3 <= FIELD_SIZE.rows
                     ? coordHeadCell.x
                     : coordHeadCell.x - 3;
             shipI = getShipI(coordHeadCell, 1, 0);
             break;
-        case DirectionGeneration.bottom:
+        case DirectionGeneration.Vertic:
             coordHeadCell.y =
                 coordHeadCell.y + 3 <= FIELD_SIZE.columns
                     ? coordHeadCell.y
                     : coordHeadCell.y - 3;
             shipI = getShipI(coordHeadCell, 0, 1);
             break;
-        case DirectionGeneration.left:
-            coordHeadCell.x =
-                coordHeadCell.x - 3 >= 1
-                    ? coordHeadCell.x
-                    : coordHeadCell.x + 3;
-            shipI = getShipI(coordHeadCell, -1, 0);
-            break;
-        case DirectionGeneration.top:
-            coordHeadCell.y =
-                coordHeadCell.y - 3 >= 1
-                    ? coordHeadCell.y
-                    : coordHeadCell.y - 3;
-            shipI = getShipI(coordHeadCell, 0, -1);
-            break;
     }
+
+    const neighBorsShipI: Array<string> = shipI.reduce(
+        (neighbors: Array<string>, coord: string) => {
+            return [...neighbors, ...getNeighbors(parseCoordinates(coord))];
+        },
+        [],
+    );
+
+    banCellsSet = new Set(neighBorsShipI);
+    shipI.forEach((value) => {
+        banCellsSet.add(value);
+    });
+    banCellsSet.forEach((value) => {
+        banCells.push(value);
+    });
 
     console.log("shipL: " + shipL);
     console.log("shipI: " + shipI);
-    return [shipL, shipI, ["7_1"], ["9_5"]];
+    return [shipL, shipI];
 };
 
-const getNeighbors = (coord: TypeCoord) => {
+function getNeighbors(coord: TypeCoord) {
     const x: number = +coord.x;
     const y: number = +coord.y;
 
@@ -149,7 +163,7 @@ const getNeighbors = (coord: TypeCoord) => {
         `${topCoord}_${x}`,
         `${topCoord}_${rightCoord}`,
     ];
-};
+}
 
 function getShipL(
     coord: TypeCoord,
