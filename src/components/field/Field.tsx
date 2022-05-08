@@ -69,7 +69,7 @@ const Field: FC<FieldProps> = ({ stateCells, onChangeField }) => {
         <div>
             <h1 className={styles.namegame}>Battle ships</h1>
             <div className={styles.numbersteps}>
-                Количество шагов: {Object.keys(stateCells).length}
+                Number of steps: {Object.keys(stateCells).length}
             </div>
             <div
                 onClick={(event: React.MouseEvent<HTMLDivElement>) =>
