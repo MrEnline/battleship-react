@@ -1,7 +1,14 @@
-import React from "react";
+import { useState } from "react";
+import Field from "../src/components/field/Field";
 
 const App = () => {
-    return <div>Работает!</div>;
+    const [stateCells, setStateCells] = useState<{}>({});
+
+    return (
+        <div>
+            <Field stateCells={stateCells} onChangeField={setStateCells} />
+        </div>
+    );
 };
 
 export default App;
