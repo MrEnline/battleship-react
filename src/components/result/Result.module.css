@@ -1,0 +1,8 @@
+.resultgame {
+    position: fixed;
+    font-size: 20px;
+    font-weight: bold;
+    top: 72%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

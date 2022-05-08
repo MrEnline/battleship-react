@@ -1,13 +1,17 @@
 .field {
     display: flex;
     flex-wrap: wrap;
-    margin: auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .cells {
     border: 1px solid grey;
     width: 38px;
     height: 38px;
+    margin: auto;
 }
 
 .cell_color__hit {
@@ -16,4 +20,19 @@
 
 .cell_color__miss {
     background-color: rgba(194, 202, 228, 0.932);
+}
+
+.namegame {
+    position: fixed;
+    top: 23%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.numbersteps {
+    position: fixed;
+    font-size: 20px;
+    top: 28%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

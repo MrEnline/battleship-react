@@ -1,8 +1,13 @@
 import { FC } from "react";
-import { FIELD_SIZE, CELL_SIZE } from "./../../utils/Constants";
+import {
+    FIELD_SIZE,
+    CELL_SIZE,
+    NUMBER_CELL_SHIPS,
+} from "./../../utils/Constants";
 import styles from "./Field.module.css";
 import classNames from "classnames";
 import { generateShips } from "../../utils/Init";
+import Result from "../result/Result";
 
 interface StateCellsProp {
     [index: string]: boolean;
@@ -16,9 +21,14 @@ interface FieldProps {
 const coordShips: Array<Array<string>> = generateShips();
 
 const Field: FC<FieldProps> = ({ stateCells, onChangeField }) => {
+    const resultGame =
+        Object.values(stateCells).filter((value) => value).length ===
+        NUMBER_CELL_SHIPS ? (
+            <Result />
+        ) : null;
+
     const generateField = () => {
         const arrItems = [];
-
         for (let i = 1; i <= FIELD_SIZE.columns; i++) {
             for (let j = 1; j <= FIELD_SIZE.rows; j++) {
                 arrItems.push(
@@ -40,6 +50,9 @@ const Field: FC<FieldProps> = ({ stateCells, onChangeField }) => {
     };
 
     const changeStateCell = (event: React.MouseEvent<HTMLDivElement>) => {
+        if (resultGame !== null) {
+            return;
+        }
         const newStateCells = { ...stateCells };
         const target: HTMLDivElement = event.target as HTMLDivElement;
         const id: string = target.dataset.xy as string;
@@ -53,14 +66,21 @@ const Field: FC<FieldProps> = ({ stateCells, onChangeField }) => {
     };
 
     return (
-        <div
-            onClick={(event: React.MouseEvent<HTMLDivElement>) =>
-                changeStateCell(event)
-            }
-            className={styles.field}
-            style={{ width: FIELD_SIZE.columns * CELL_SIZE }}
-        >
-            {generateField()}
+        <div>
+            <h1 className={styles.namegame}>Battle ships</h1>
+            <div className={styles.numbersteps}>
+                Количество шагов: {Object.keys(stateCells).length}
+            </div>
+            <div
+                onClick={(event: React.MouseEvent<HTMLDivElement>) =>
+                    changeStateCell(event)
+                }
+                className={styles.field}
+                style={{ width: FIELD_SIZE.columns * CELL_SIZE }}
+            >
+                {generateField()}
+            </div>
+            {resultGame}
         </div>
     );
 };
