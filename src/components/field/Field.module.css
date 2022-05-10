@@ -15,6 +15,10 @@
 }
 
 .cell_color__hit {
+    background-color: rgba(238, 103, 13, 0.932);
+}
+
+.cell_color__ship {
     background-color: rgba(38, 235, 21, 0.932);
 }
 

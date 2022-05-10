@@ -1,4 +1,14 @@
 import { FIELD_SIZE } from "./Constants";
+const MAX_COUNT_ONE_SHIP: number = 2;
+
+interface StateCellsProp {
+    [index: string]: boolean;
+}
+
+interface TypeCoord {
+    y: number;
+    x: number;
+}
 
 enum LimitsCoord {
     Max = FIELD_SIZE.columns,
@@ -124,16 +134,28 @@ export const generateShips = () => {
 
     let countShipOne = 0;
     let shipsOne: Array<string> = [];
-    while (countShipOne < 2) {
+    while (countShipOne < MAX_COUNT_ONE_SHIP) {
         coordHeadCell = generateRandomCoord();
         if (!blockCells.includes(`${coordHeadCell.y}_${coordHeadCell.x}`)) {
             blockCells.push(`${coordHeadCell.y}_${coordHeadCell.x}`);
             shipsOne.push(`${coordHeadCell.y}_${coordHeadCell.x}`);
             countShipOne++;
+            if (countShipOne < MAX_COUNT_ONE_SHIP) {
+                blockCells = [...blockCells, ...getNeighbors(coordHeadCell)];
+            }
         }
     }
 
-    return [shipL, shipI, shipsOne];
+    //return [shipL, shipI, shipsOne];
+    //return {...shipL, ...shipI, ...shipsOne};
+
+    return [...shipL, ...shipI, ...shipsOne].reduce(
+        (accum: StateCellsProp, currValue: string) => {
+            accum[currValue] = true;
+            return accum;
+        },
+        {} as StateCellsProp,
+    );
 };
 
 function getNeighbors(coord: TypeCoord) {
@@ -182,11 +204,6 @@ function getShipI(coord: TypeCoord, kx: number, ky: number): Array<string> {
         `${coord.y + ky * 2}_${coord.x + kx * 2}`,
         `${coord.y + ky * 3}_${coord.x + kx * 3}`,
     ];
-}
-
-interface TypeCoord {
-    y: number;
-    x: number;
 }
 
 function generateRandomValue(max: number, min: number) {
