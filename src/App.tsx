@@ -1,28 +1,40 @@
 import { useState } from "react";
 import Field from "../src/components/field/Field";
-import Button from "../src/components/buttons/Button";
+import Buttons from "../src/components/buttons/Button";
+import Header from "../src/components/header/Header";
+import CountSteps from "../src/components/countSteps/CountSteps";
 import { generateShips } from "../src/utils/Init";
-
-interface StateCellsProp {
-    [index: string]: boolean;
-}
-
-const coordShips: StateCellsProp = generateShips();
+import { StateCellsProp } from "./utils/Types";
 
 const App = () => {
-    const [stateCells, setStateCells] = useState<{}>({});
+    const [stateCells, setStateCells] = useState<StateCellsProp>({});
     const [runGame, setRunGame] = useState(false);
+    const [retryGame, setRetryGame] = useState(false);
+    const [coordShips, setCoordShips] = useState<StateCellsProp>(
+        generateShips(),
+    );
 
     return (
         <div>
-            <Button
+            <Header />
+            <CountSteps stateCells={stateCells} />
+            <Buttons
                 runGame={runGame}
                 onStartGame={setRunGame}
                 stateCells={stateCells}
                 setStateCells={setStateCells}
                 coordShips={coordShips}
+                retryGame={retryGame}
+                onRetryGame={setRetryGame}
+                setCoordShips={setCoordShips}
             />
-            <Field stateCells={stateCells} coordShips={coordShips} />
+            <Field
+                stateCells={stateCells}
+                coordShips={coordShips}
+                onRunGame={setRunGame}
+                retryGame={retryGame}
+                onRetryGame={setRetryGame}
+            />
         </div>
     );
 };

@@ -1,0 +1,19 @@
+.buttons {
+    display: flex;
+    width: 300px;
+    height: 30px;
+    justify-content: space-around;
+    position: fixed;
+    top: 26%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+button {
+    font-size: 20px;
+}
+
+.resultgame {
+    font-size: 20px;
+    font-weight: bold;
+}

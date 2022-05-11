@@ -1,0 +1,7 @@
+.numbersteps {
+    position: fixed;
+    font-size: 20px;
+    top: 28%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

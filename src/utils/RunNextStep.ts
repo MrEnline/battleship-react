@@ -1,18 +1,7 @@
 import { FIELD_SIZE } from "./Constants";
-
-interface StateCellsProp {
-    [index: string]: boolean;
-}
-
-interface TypeCoord {
-    y: number;
-    x: number;
-}
-
-enum LimitsCoord {
-    Max = FIELD_SIZE.columns,
-    Min = 1,
-}
+import { StateCellsProp } from "../utils/Types";
+import { TypeCoord } from "../utils/Types";
+import { LimitsCoord } from "../utils/Types";
 
 function generateRandomCoord(): TypeCoord {
     const y: number = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);

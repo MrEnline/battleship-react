@@ -1,29 +1,9 @@
-import { FIELD_SIZE } from "./Constants";
-const MAX_COUNT_ONE_SHIP: number = 2;
-
-interface StateCellsProp {
-    [index: string]: boolean;
-}
-
-interface TypeCoord {
-    y: number;
-    x: number;
-}
-
-enum LimitsCoord {
-    Max = FIELD_SIZE.columns,
-    Min = 1,
-}
-
-enum LimitsDirections {
-    Min = 1,
-    Max = 2,
-}
-
-enum DirectionGeneration {
-    Horiz = 1,
-    Vertic = 2,
-}
+import { FIELD_SIZE, MAX_COUNT_ONE_SHIP } from "./Constants";
+import { StateCellsProp } from "../utils/Types";
+import { TypeCoord } from "../utils/Types";
+import { LimitsCoord } from "../utils/Types";
+import { DirectionGeneration } from "../utils/Types";
+import { LimitsDirections } from "../utils/Types";
 
 export const generateShips = () => {
     let coordHeadCell = generateRandomCoord();
@@ -145,9 +125,6 @@ export const generateShips = () => {
             }
         }
     }
-
-    //return [shipL, shipI, shipsOne];
-    //return {...shipL, ...shipI, ...shipsOne};
 
     return [...shipL, ...shipI, ...shipsOne].reduce(
         (accum: StateCellsProp, currValue: string) => {
