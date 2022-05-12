@@ -1,32 +1,24 @@
-import { FC } from "react";
-import {
-    FIELD_SIZE,
-    CELL_SIZE,
-    NUMBER_CELL_SHIPS,
-} from "./../../utils/Constants";
+import { FC, useEffect } from "react";
+import { FIELD_SIZE, CELL_SIZE } from "./../../utils/Constants";
 import styles from "./Field.module.css";
 import classNames from "classnames";
-import { generateShips } from "../../utils/Init";
-import Result from "../result/Result";
+import { StateCellsProp } from "../../utils/Types";
 
-interface StateCellsProp {
-    [index: string]: boolean;
-}
-
-interface FieldProps {
+interface TypesProps {
     stateCells: StateCellsProp;
-    onChangeField: (obj: {}) => void;
+    coordShips: StateCellsProp;
+    onRunGame: (obj: boolean) => void;
+    retryGame: boolean;
+    onRetryGame: (obj: boolean) => void;
 }
 
-const coordShips: Array<Array<string>> = generateShips();
-
-const Field: FC<FieldProps> = ({ stateCells, onChangeField }) => {
-    const resultGame =
-        Object.values(stateCells).filter((value) => value).length ===
-        NUMBER_CELL_SHIPS ? (
-            <Result />
-        ) : null;
-
+const Field: FC<TypesProps> = ({
+    stateCells,
+    coordShips,
+    onRunGame,
+    retryGame,
+    onRetryGame,
+}) => {
     const generateField = () => {
         const arrItems = [];
         for (let i = 1; i <= FIELD_SIZE.columns; i++) {
@@ -34,11 +26,16 @@ const Field: FC<FieldProps> = ({ stateCells, onChangeField }) => {
                 arrItems.push(
                     <div
                         className={classNames(styles.cells, {
-                            [styles.cell_color__hit]: stateCells[`${i}_${j}`],
-                            [styles.cell_color__miss]:
-                                stateCells[`${i}_${j}`] !== undefined
-                                    ? !stateCells[`${i}_${j}`]
+                            [styles.cell_color__ship]:
+                                coordShips[`${i}_${j}`] !== undefined
+                                    ? coordShips[`${i}_${j}`]
                                     : false,
+                            [styles.cell_color__hit]:
+                                stateCells[`${i}_${j}`] !== undefined &&
+                                stateCells[`${i}_${j}`],
+                            [styles.cell_color__miss]:
+                                stateCells[`${i}_${j}`] !== undefined &&
+                                !stateCells[`${i}_${j}`],
                         })}
                         key={`${(i - 1) * FIELD_SIZE.columns + j}`}
                         data-xy={`${i}_${j}`}
@@ -49,38 +46,27 @@ const Field: FC<FieldProps> = ({ stateCells, onChangeField }) => {
         return arrItems;
     };
 
-    const changeStateCell = (event: React.MouseEvent<HTMLDivElement>) => {
-        if (resultGame !== null) {
-            return;
+    useEffect(() => {
+        const coordFireShips = Object.keys(stateCells).filter(
+            (value) => stateCells[value],
+        );
+        if (
+            Object.keys(coordShips).length === coordFireShips.length &&
+            !retryGame
+        ) {
+            onRunGame(retryGame);
+            onRetryGame(!retryGame);
         }
-        const newStateCells = { ...stateCells };
-        const target: HTMLDivElement = event.target as HTMLDivElement;
-        const id: string = target.dataset.xy as string;
-        newStateCells[id] = false;
-        for (let i = 0; i < coordShips.length; i++) {
-            if (coordShips[i].includes(id)) {
-                newStateCells[id] = true;
-            }
-        }
-        onChangeField(newStateCells);
-    };
+    });
 
     return (
         <div>
-            <h1 className={styles.namegame}>Battle ships</h1>
-            <div className={styles.numbersteps}>
-                Number of steps: {Object.keys(stateCells).length}
-            </div>
             <div
-                onClick={(event: React.MouseEvent<HTMLDivElement>) =>
-                    changeStateCell(event)
-                }
                 className={styles.field}
                 style={{ width: FIELD_SIZE.columns * CELL_SIZE }}
             >
                 {generateField()}
             </div>
-            {resultGame}
         </div>
     );
 };

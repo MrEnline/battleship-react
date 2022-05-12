@@ -1,27 +1,17 @@
-import { FIELD_SIZE } from "./Constants";
-
-enum LimitsCoord {
-    Max = FIELD_SIZE.columns,
-    Min = 1,
-}
-
-enum LimitsDirections {
-    Min = 1,
-    Max = 2,
-}
-
-enum DirectionGeneration {
-    Horiz = 1,
-    Vertic = 2,
-}
+import { FIELD_SIZE, MAX_COUNT_ONE_SHIP } from "./Constants";
+import { StateCellsProp } from "../utils/Types";
+import { TypeCoord } from "../utils/Types";
+import { LimitsCoord } from "../utils/Types";
+import { DirectionGeneration } from "../utils/Types";
+import { LimitsDirections } from "../utils/Types";
 
 export const generateShips = () => {
     let coordHeadCell = generateRandomCoord();
-    let directShip: number = generateRandomValue(
+    let directShip = generateRandomValue(
         LimitsDirections.Max,
         LimitsDirections.Min,
     );
-    let shipL: Array<string> = [];
+    let shipL: string[] = [];
     let coordXEndElem: number = 1;
     let coordYEndElem: number = 1;
     switch (directShip) {
@@ -58,13 +48,13 @@ export const generateShips = () => {
     );
 
     let blockCellsSet = new Set(neighBorsShipL);
-    let blockCells: Array<string> = [];
+    let blockCells: string[] = [];
 
     blockCellsSet.forEach((value) => {
         blockCells.push(value);
     });
 
-    let shipI: Array<string> = [];
+    let shipI: string[] = [];
     coordHeadCell = generateRandomCoord();
 
     let isGenerateCoordShipI: boolean = true;
@@ -107,7 +97,7 @@ export const generateShips = () => {
         }
     }
 
-    const neighBorsShipI: Array<string> = shipI.reduce(
+    const neighBorsShipI = shipI.reduce(
         (neighbors: Array<string>, coord: string) => {
             return [...neighbors, ...getNeighbors(parseCoordinates(coord))];
         },
@@ -123,22 +113,31 @@ export const generateShips = () => {
     });
 
     let countShipOne = 0;
-    let shipsOne: Array<string> = [];
-    while (countShipOne < 2) {
+    let shipsOne: string[] = [];
+    while (countShipOne < MAX_COUNT_ONE_SHIP) {
         coordHeadCell = generateRandomCoord();
         if (!blockCells.includes(`${coordHeadCell.y}_${coordHeadCell.x}`)) {
             blockCells.push(`${coordHeadCell.y}_${coordHeadCell.x}`);
             shipsOne.push(`${coordHeadCell.y}_${coordHeadCell.x}`);
             countShipOne++;
+            if (countShipOne < MAX_COUNT_ONE_SHIP) {
+                blockCells = [...blockCells, ...getNeighbors(coordHeadCell)];
+            }
         }
     }
 
-    return [shipL, shipI, shipsOne];
+    return [...shipL, ...shipI, ...shipsOne].reduce(
+        (accum: StateCellsProp, currValue: string) => {
+            accum[currValue] = true;
+            return accum;
+        },
+        {} as StateCellsProp,
+    );
 };
 
 function getNeighbors(coord: TypeCoord) {
-    const x: number = +coord.x;
-    const y: number = +coord.y;
+    const x = +coord.x;
+    const y = +coord.y;
 
     const topCoord = y === 1 ? -1 : y - 1;
     const bottomCoord = y === FIELD_SIZE.columns ? -1 : y + 1;
@@ -164,7 +163,7 @@ function getShipL(
     ky: number,
     coordXEndElem: number = 0,
     coordYEndElem: number = 0,
-): Array<string> {
+): string[] {
     return [
         `${coord.y}_${coord.x}`,
         `${coord.y + ky * 1}_${coord.x + kx * 1}`,
@@ -175,7 +174,7 @@ function getShipL(
     ];
 }
 
-function getShipI(coord: TypeCoord, kx: number, ky: number): Array<string> {
+function getShipI(coord: TypeCoord, kx: number, ky: number): string[] {
     return [
         `${coord.y}_${coord.x}`,
         `${coord.y + ky * 1}_${coord.x + kx * 1}`,
@@ -184,18 +183,13 @@ function getShipI(coord: TypeCoord, kx: number, ky: number): Array<string> {
     ];
 }
 
-interface TypeCoord {
-    y: number;
-    x: number;
-}
-
 function generateRandomValue(max: number, min: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function generateRandomCoord(): TypeCoord {
-    const y: number = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
-    const x: number = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
+    const y = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
+    const x = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
     return { x, y };
 }
 

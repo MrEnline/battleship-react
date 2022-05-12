@@ -1,0 +1,19 @@
+.buttons {
+    display: flex;
+    width: 400px;
+    height: 30px;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button {
+    font-size: 20px;
+}
+
+.resultgame {
+    font-size: 20px;
+    font-weight: bold;
+}
