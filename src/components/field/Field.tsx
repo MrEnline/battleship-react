@@ -4,7 +4,7 @@ import styles from "./Field.module.css";
 import classNames from "classnames";
 import { StateCellsProp } from "../../utils/Types";
 
-interface FieldProps {
+interface TypesProps {
     stateCells: StateCellsProp;
     coordShips: StateCellsProp;
     onRunGame: (obj: boolean) => void;
@@ -12,7 +12,7 @@ interface FieldProps {
     onRetryGame: (obj: boolean) => void;
 }
 
-const Field: FC<FieldProps> = ({
+const Field: FC<TypesProps> = ({
     stateCells,
     coordShips,
     onRunGame,

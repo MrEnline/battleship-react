@@ -2,7 +2,11 @@ import { FC } from "react";
 import styles from "./CountSteps.module.css";
 import { StateCellsProp } from "../../utils/Types";
 
-const CountSteps: FC<StateCellsProp> = ({ stateCells }) => {
+interface TypesProps {
+    stateCells: StateCellsProp;
+}
+
+const CountSteps: FC<TypesProps> = ({ stateCells }) => {
     return (
         <div className={styles.numbersteps}>
             Number of steps: {Object.keys(stateCells).length}

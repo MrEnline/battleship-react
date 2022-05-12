@@ -11,7 +11,7 @@ export const generateShips = () => {
         LimitsDirections.Max,
         LimitsDirections.Min,
     );
-    let shipL: Array<string> = [];
+    let shipL: string[] = [];
     let coordXEndElem: number = 1;
     let coordYEndElem: number = 1;
     switch (directShip) {
@@ -48,13 +48,13 @@ export const generateShips = () => {
     );
 
     let blockCellsSet = new Set(neighBorsShipL);
-    let blockCells: Array<string> = [];
+    let blockCells: string[] = [];
 
     blockCellsSet.forEach((value) => {
         blockCells.push(value);
     });
 
-    let shipI: Array<string> = [];
+    let shipI: string[] = [];
     coordHeadCell = generateRandomCoord();
 
     let isGenerateCoordShipI: boolean = true;

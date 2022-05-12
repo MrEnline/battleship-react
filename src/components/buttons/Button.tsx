@@ -2,29 +2,23 @@ import { FC } from "react";
 import { useInterval } from "../hooks/useInterval";
 import { runNextStep } from "../../utils/RunNextStep";
 import { DELAY } from "../../utils/Constants";
-import styles from "./Button.module.css";
+import styles from "./Buttons.module.css";
 import { StateCellsProp } from "../../utils/Types";
-import { generateShips } from "../../utils/Init";
+import RetryButton from "./RetryButton";
+import RunStopButton from "./RunStopButton";
 
-interface TypePropsRunStopButton {
+interface TypesProps {
     runGame: boolean;
     onStartGame: (runGame: boolean) => void;
-}
-
-interface TypePropsRetryButton {
     retryGame: boolean;
     onRetryGame: (retryGame: boolean) => void;
     setStateCells: (obj: {}) => void;
     setCoordShips: (obj: {}) => void;
-}
-
-interface TypeProps extends TypePropsRunStopButton, TypePropsRetryButton {
     stateCells: StateCellsProp;
-
     coordShips: StateCellsProp;
 }
 
-const Buttons: FC<TypeProps> = ({
+const Buttons: FC<TypesProps> = ({
     runGame,
     onStartGame,
     stateCells,
@@ -52,39 +46,6 @@ const Buttons: FC<TypeProps> = ({
     );
 
     return <div className={styles.buttons}>{activeButton}</div>;
-};
-
-const RunStopButton: FC<TypePropsRunStopButton> = ({
-    runGame,
-    onStartGame,
-}) => {
-    return (
-        <>
-            <button onClick={() => onStartGame(!runGame)}>
-                {runGame ? "Stop" : "Start"}
-            </button>
-        </>
-    );
-};
-
-const RetryButton: FC<TypePropsRetryButton> = ({
-    retryGame,
-    onRetryGame,
-    setStateCells,
-    setCoordShips,
-}) => {
-    const handleGenerateNewGame = () => {
-        onRetryGame(!retryGame);
-        setStateCells({});
-        setCoordShips(generateShips());
-    };
-
-    return (
-        <>
-            <div className={styles.resultgame}>THE GAME IS OVER</div>
-            <button onClick={handleGenerateNewGame}>Retry</button>
-        </>
-    );
 };
 
 export default Buttons;

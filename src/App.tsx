@@ -17,7 +17,6 @@ const App = () => {
     return (
         <div>
             <Header />
-            <CountSteps stateCells={stateCells} />
             <Buttons
                 runGame={runGame}
                 onStartGame={setRunGame}
@@ -28,6 +27,7 @@ const App = () => {
                 onRetryGame={setRetryGame}
                 setCoordShips={setCoordShips}
             />
+            <CountSteps stateCells={stateCells} />
             <Field
                 stateCells={stateCells}
                 coordShips={coordShips}
