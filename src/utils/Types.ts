@@ -14,6 +14,11 @@ export enum LimitsCoord {
     Min = 1,
 }
 
+export enum LimitsStateShips {
+    Max = 8,
+    Min = 1,
+}
+
 export enum LimitsDirections {
     Min = 1,
     Max = 2,
