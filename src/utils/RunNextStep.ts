@@ -1,4 +1,3 @@
-import { FIELD_SIZE } from "./Constants";
 import { StateCellsProp } from "../utils/Types";
 import { TypeCoord } from "../utils/Types";
 import { LimitsCoord } from "../utils/Types";

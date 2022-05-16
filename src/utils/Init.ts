@@ -5,19 +5,19 @@ import { LimitsCoord } from "../utils/Types";
 import { LimitsStateShips } from "../utils/Types";
 
 export const generateShips = () => {
-    const initShips = INITIAL_SHIPS;
     let ships: string[] = [];
     let blockCellsSet = new Set<string>();
     let blockCells: string[] = [];
-    for (let i = 0; i < initShips.length; i++) {
-        while (initShips[i].count > 0) {
-            const newScheme = generateRandomScheme(initShips[i].scheme);
+    for (let i = 0; i < INITIAL_SHIPS.length; i++) {
+        let count = INITIAL_SHIPS[i].count;
+        while (count > 0) {
+            const newScheme = generateRandomScheme(INITIAL_SHIPS[i].scheme);
             const maxPosition = {
                 y: newScheme.length - 1,
                 x: newScheme[0].length - 1,
             };
             while (true) {
-                const startCoord = generateRandomCoord(); //генерация новой координаты для корабля
+                const startCoord = generateRandomCoord();
                 const coordShipOnField = setShipOnField(
                     startCoord,
                     maxPosition,
@@ -40,10 +40,9 @@ export const generateShips = () => {
                     break;
                 }
             }
-            INITIAL_SHIPS[i].count--;
+            count--;
         }
     }
-
     return ships.reduce((accum: StateCellsProp, currValue: string) => {
         accum[currValue] = true;
         return accum;
@@ -117,32 +116,6 @@ function getNeighbors(coord: TypeCoord) {
         `${topCoord}_${rightCoord}`,
     ].filter((value) => value.indexOf("-1") === -1);
 }
-
-// function getShipL(
-//     coord: TypeCoord,
-//     kx: number,
-//     ky: number,
-//     coordXEndElem: number = 0,
-//     coordYEndElem: number = 0,
-// ): string[] {
-//     return [
-//         `${coord.y}_${coord.x}`,
-//         `${coord.y + ky * 1}_${coord.x + kx * 1}`,
-//         `${coord.y + ky * 2}_${coord.x + kx * 2}`,
-//         `${coordYEndElem ? coordYEndElem : coord.y + ky * 2}_${
-//             coordXEndElem ? coordXEndElem : coord.x + kx * 2
-//         }`,
-//     ];
-// }
-
-// function getShipI(coord: TypeCoord, kx: number, ky: number): string[] {
-//     return [
-//         `${coord.y}_${coord.x}`,
-//         `${coord.y + ky * 1}_${coord.x + kx * 1}`,
-//         `${coord.y + ky * 2}_${coord.x + kx * 2}`,
-//         `${coord.y + ky * 3}_${coord.x + kx * 3}`,
-//     ];
-// }
 
 function generateRandomValue(max: number, min: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
