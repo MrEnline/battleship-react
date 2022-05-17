@@ -1,16 +1,5 @@
 import { StateCellsProp } from "../utils/Types";
-import { TypeCoord } from "../utils/Types";
-import { LimitsCoord } from "../utils/Types";
-
-function generateRandomCoord(): TypeCoord {
-    const y: number = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
-    const x: number = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
-    return { x, y };
-}
-
-function generateRandomValue(max: number, min: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+import { generateRandomCoord } from "./Functions";
 
 export const runNextStep = (
     stateCells: StateCellsProp,

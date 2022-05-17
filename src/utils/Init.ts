@@ -1,12 +1,11 @@
 import { FIELD_SIZE, INITIAL_SHIPS } from "./Constants";
 import { StateCellsProp } from "../utils/Types";
 import { TypeCoord } from "../utils/Types";
-import { LimitsCoord } from "../utils/Types";
 import { LimitsStateShips } from "../utils/Types";
+import { generateRandomCoord, generateRandomValue } from "./Functions";
 
 export const generateShips = () => {
     let ships: string[] = [];
-    let blockCellsSet = new Set<string>();
     let blockCells: string[] = [];
     for (let i = 0; i < INITIAL_SHIPS.length; i++) {
         let count = INITIAL_SHIPS[i].count;
@@ -18,7 +17,7 @@ export const generateShips = () => {
             };
             while (true) {
                 const startCoord = generateRandomCoord();
-                const coordShipOnField = setShipOnField(
+                const coordShipOnField = getCoordShipOnField(
                     startCoord,
                     maxPosition,
                     newScheme,
@@ -35,7 +34,7 @@ export const generateShips = () => {
                         },
                         [],
                     );
-                    blockCellsSet = new Set(neighBorsShip);
+                    const blockCellsSet = new Set(neighBorsShip);
                     blockCellsSet.forEach((value) => blockCells.push(value));
                     break;
                 }
@@ -49,7 +48,7 @@ export const generateShips = () => {
     }, {} as StateCellsProp);
 };
 
-function setShipOnField(
+function getCoordShipOnField(
     startCoord: TypeCoord,
     maxPosition: TypeCoord,
     newScheme: number[][],
@@ -115,16 +114,6 @@ function getNeighbors(coord: TypeCoord) {
         `${topCoord}_${x}`,
         `${topCoord}_${rightCoord}`,
     ].filter((value) => value.indexOf("-1") === -1);
-}
-
-function generateRandomValue(max: number, min: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function generateRandomCoord(): TypeCoord {
-    const y = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
-    const x = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
-    return { x, y };
 }
 
 function parseCoordinates(xy: string): TypeCoord {

@@ -18,13 +18,3 @@ export enum LimitsStateShips {
     Max = 8,
     Min = 1,
 }
-
-export enum LimitsDirections {
-    Min = 1,
-    Max = 2,
-}
-
-export enum DirectionGeneration {
-    Horiz = 1,
-    Vertic = 2,
-}

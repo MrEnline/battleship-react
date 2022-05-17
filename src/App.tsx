@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Field from "../src/components/field/Field";
-import Buttons from "../src/components/buttons/Button";
+import Buttons from "./components/buttons/Buttons";
 import Header from "../src/components/header/Header";
 import CountSteps from "../src/components/countSteps/CountSteps";
 import { generateShips } from "../src/utils/Init";
