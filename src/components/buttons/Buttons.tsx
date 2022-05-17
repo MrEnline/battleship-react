@@ -4,8 +4,7 @@ import { runNextStep } from "../../utils/RunNextStep";
 import { DELAY } from "../../utils/Constants";
 import styles from "./Buttons.module.css";
 import { StateCellsProp } from "../../utils/Types";
-import RetryButton from "./RetryButton";
-import RunStopButton from "./RunStopButton";
+import { generateShips } from "../../utils/Init";
 
 interface TypesProps {
     runGame: boolean;
@@ -34,15 +33,23 @@ const Buttons: FC<TypesProps> = ({
 
     useInterval(handleNextStep, runGame ? DELAY : null);
 
+    const handleGenerateNewGame = () => {
+        onRetryGame(!retryGame);
+        setStateCells({});
+        setCoordShips(generateShips());
+    };
+
     const activeButton = retryGame ? (
-        <RetryButton
-            retryGame={retryGame}
-            onRetryGame={onRetryGame}
-            setStateCells={setStateCells}
-            setCoordShips={setCoordShips}
-        />
+        <>
+            <div className={styles.resultgame}>THE GAME IS OVER</div>
+            <button onClick={handleGenerateNewGame}>Retry</button>
+        </>
     ) : (
-        <RunStopButton runGame={runGame} onStartGame={onStartGame} />
+        <>
+            <button onClick={() => onStartGame(!runGame)}>
+                {runGame ? "Stop" : "Start"}
+            </button>
+        </>
     );
 
     return <div className={styles.buttons}>{activeButton}</div>;

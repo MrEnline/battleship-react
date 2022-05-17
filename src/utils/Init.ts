@@ -1,139 +1,98 @@
-import { FIELD_SIZE, MAX_COUNT_ONE_SHIP } from "./Constants";
+import { FIELD_SIZE, INITIAL_SHIPS } from "./Constants";
 import { StateCellsProp } from "../utils/Types";
 import { TypeCoord } from "../utils/Types";
-import { LimitsCoord } from "../utils/Types";
-import { DirectionGeneration } from "../utils/Types";
-import { LimitsDirections } from "../utils/Types";
+import { LimitsStateShips } from "../utils/Types";
+import { generateRandomCoord, generateRandomValue } from "./Functions";
 
 export const generateShips = () => {
-    let coordHeadCell = generateRandomCoord();
-    let directShip = generateRandomValue(
-        LimitsDirections.Max,
-        LimitsDirections.Min,
-    );
-    let shipL: string[] = [];
-    let coordXEndElem: number = 1;
-    let coordYEndElem: number = 1;
-    switch (directShip) {
-        case DirectionGeneration.Horiz:
-            coordHeadCell.x =
-                coordHeadCell.x + 2 <= FIELD_SIZE.rows
-                    ? coordHeadCell.x
-                    : coordHeadCell.x - 2;
-            if (coordHeadCell.y - 1 === 0) {
-                coordYEndElem = coordHeadCell.y + 1;
-            }
-            if (coordHeadCell.y - 1 > 0) {
-                coordYEndElem = coordHeadCell.y - 1;
-            }
-            shipL = getShipL(coordHeadCell, 1, 0, 0, coordYEndElem);
-            break;
-        case DirectionGeneration.Vertic:
-            coordHeadCell.y =
-                coordHeadCell.y + 2 <= FIELD_SIZE.columns
-                    ? coordHeadCell.y
-                    : coordHeadCell.y - 2;
-            coordXEndElem =
-                coordHeadCell.x + 1 <= FIELD_SIZE.rows
-                    ? coordHeadCell.x + 1
-                    : coordHeadCell.x - 1;
-            shipL = getShipL(coordHeadCell, 0, 1, coordXEndElem, 0);
-            break;
-    }
-    const neighBorsShipL: Array<string> = shipL.reduce(
-        (neighbors: Array<string>, coord: string) => {
-            return [...neighbors, ...getNeighbors(parseCoordinates(coord))];
-        },
-        [],
-    );
-
-    let blockCellsSet = new Set(neighBorsShipL);
+    let ships: string[] = [];
     let blockCells: string[] = [];
-
-    blockCellsSet.forEach((value) => {
-        blockCells.push(value);
-    });
-
-    let shipI: string[] = [];
-    coordHeadCell = generateRandomCoord();
-
-    let isGenerateCoordShipI: boolean = true;
-    while (isGenerateCoordShipI) {
-        directShip = generateRandomValue(
-            LimitsDirections.Max,
-            LimitsDirections.Min,
-        );
-        coordHeadCell = generateRandomCoord();
-        coordHeadCell.x =
-            coordHeadCell.x + 3 <= FIELD_SIZE.rows
-                ? coordHeadCell.x
-                : coordHeadCell.x - 3;
-        coordHeadCell.y =
-            coordHeadCell.y + 3 <= FIELD_SIZE.columns
-                ? coordHeadCell.y
-                : coordHeadCell.y - 3;
-        switch (directShip) {
-            case DirectionGeneration.Horiz:
-                coordHeadCell.x =
-                    coordHeadCell.x + 3 <= FIELD_SIZE.rows
-                        ? coordHeadCell.x
-                        : coordHeadCell.x - 3;
-                shipI = getShipI(coordHeadCell, 1, 0);
-                break;
-            case DirectionGeneration.Vertic:
-                coordHeadCell.y =
-                    coordHeadCell.y + 3 <= FIELD_SIZE.columns
-                        ? coordHeadCell.y
-                        : coordHeadCell.y - 3;
-                shipI = getShipI(coordHeadCell, 0, 1);
-                break;
-        }
-        isGenerateCoordShipI = false;
-        for (let item of blockCells) {
-            if (shipI.includes(item)) {
-                isGenerateCoordShipI = true;
-                break;
+    for (let i = 0; i < INITIAL_SHIPS.length; i++) {
+        let count = INITIAL_SHIPS[i].count;
+        while (count > 0) {
+            const newScheme = generateRandomScheme(INITIAL_SHIPS[i].scheme);
+            const maxPosition = {
+                y: newScheme.length - 1,
+                x: newScheme[0].length - 1,
+            };
+            while (true) {
+                const startCoord = generateRandomCoord();
+                const coordShipOnField = getCoordShipOnField(
+                    startCoord,
+                    maxPosition,
+                    newScheme,
+                    blockCells,
+                );
+                if (coordShipOnField !== undefined) {
+                    ships = [...ships, ...coordShipOnField];
+                    const neighBorsShip = coordShipOnField.reduce(
+                        (neighbors: Array<string>, coord: string) => {
+                            return [
+                                ...neighbors,
+                                ...getNeighbors(parseCoordinates(coord)),
+                            ];
+                        },
+                        [],
+                    );
+                    const blockCellsSet = new Set(neighBorsShip);
+                    blockCellsSet.forEach((value) => blockCells.push(value));
+                    break;
+                }
             }
+            count--;
         }
     }
-
-    const neighBorsShipI = shipI.reduce(
-        (neighbors: Array<string>, coord: string) => {
-            return [...neighbors, ...getNeighbors(parseCoordinates(coord))];
-        },
-        [],
-    );
-
-    blockCellsSet = new Set(neighBorsShipI);
-    neighBorsShipI.forEach((value) => {
-        blockCellsSet.add(value);
-    });
-    blockCellsSet.forEach((value) => {
-        blockCells.push(value);
-    });
-
-    let countShipOne = 0;
-    let shipsOne: string[] = [];
-    while (countShipOne < MAX_COUNT_ONE_SHIP) {
-        coordHeadCell = generateRandomCoord();
-        if (!blockCells.includes(`${coordHeadCell.y}_${coordHeadCell.x}`)) {
-            blockCells.push(`${coordHeadCell.y}_${coordHeadCell.x}`);
-            shipsOne.push(`${coordHeadCell.y}_${coordHeadCell.x}`);
-            countShipOne++;
-            if (countShipOne < MAX_COUNT_ONE_SHIP) {
-                blockCells = [...blockCells, ...getNeighbors(coordHeadCell)];
-            }
-        }
-    }
-
-    return [...shipL, ...shipI, ...shipsOne].reduce(
-        (accum: StateCellsProp, currValue: string) => {
-            accum[currValue] = true;
-            return accum;
-        },
-        {} as StateCellsProp,
-    );
+    return ships.reduce((accum: StateCellsProp, currValue: string) => {
+        accum[currValue] = true;
+        return accum;
+    }, {} as StateCellsProp);
 };
+
+function getCoordShipOnField(
+    startCoord: TypeCoord,
+    maxPosition: TypeCoord,
+    newScheme: number[][],
+    blockCells: string[],
+) {
+    let coordShip: string[] = [];
+    for (let y = 0; y <= maxPosition.y; y++) {
+        for (let x = 0; x <= maxPosition.x; x++) {
+            if (!newScheme[y][x]) {
+                continue;
+            }
+            if (isBlockCells(startCoord.y + y, startCoord.x + x, blockCells)) {
+                return;
+            }
+            coordShip.push(`${startCoord.y + y}_${startCoord.x + x}`);
+        }
+    }
+    return coordShip;
+}
+
+function isBlockCells(y: number, x: number, blockCells: string[]) {
+    return (
+        y > FIELD_SIZE.columns ||
+        x > FIELD_SIZE.rows ||
+        blockCells.includes(`${y}_${x}`)
+    );
+}
+
+function generateRandomScheme(scheme: number[][]) {
+    const newScheme =
+        generateRandomValue(LimitsStateShips.Max, LimitsStateShips.Min) >= 5
+            ? scheme
+            : scheme[0].map((value, i) => scheme.map((arr) => arr[i]));
+    if (newScheme.length === 1) {
+        return newScheme;
+    }
+    if (generateRandomValue(LimitsStateShips.Max, LimitsStateShips.Min) >= 5) {
+        newScheme.reverse();
+    }
+    if (generateRandomValue(LimitsStateShips.Max, LimitsStateShips.Min) >= 5) {
+        newScheme.forEach((value) => value.reverse());
+    }
+    return newScheme;
+}
 
 function getNeighbors(coord: TypeCoord) {
     const x = +coord.x;
@@ -155,42 +114,6 @@ function getNeighbors(coord: TypeCoord) {
         `${topCoord}_${x}`,
         `${topCoord}_${rightCoord}`,
     ].filter((value) => value.indexOf("-1") === -1);
-}
-
-function getShipL(
-    coord: TypeCoord,
-    kx: number,
-    ky: number,
-    coordXEndElem: number = 0,
-    coordYEndElem: number = 0,
-): string[] {
-    return [
-        `${coord.y}_${coord.x}`,
-        `${coord.y + ky * 1}_${coord.x + kx * 1}`,
-        `${coord.y + ky * 2}_${coord.x + kx * 2}`,
-        `${coordYEndElem ? coordYEndElem : coord.y + ky * 2}_${
-            coordXEndElem ? coordXEndElem : coord.x + kx * 2
-        }`,
-    ];
-}
-
-function getShipI(coord: TypeCoord, kx: number, ky: number): string[] {
-    return [
-        `${coord.y}_${coord.x}`,
-        `${coord.y + ky * 1}_${coord.x + kx * 1}`,
-        `${coord.y + ky * 2}_${coord.x + kx * 2}`,
-        `${coord.y + ky * 3}_${coord.x + kx * 3}`,
-    ];
-}
-
-function generateRandomValue(max: number, min: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function generateRandomCoord(): TypeCoord {
-    const y = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
-    const x = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
-    return { x, y };
 }
 
 function parseCoordinates(xy: string): TypeCoord {
