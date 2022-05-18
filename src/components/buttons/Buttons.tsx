@@ -45,11 +45,9 @@ const Buttons: FC<TypesProps> = ({
             <button onClick={handleGenerateNewGame}>Retry</button>
         </>
     ) : (
-        <>
-            <button onClick={() => onStartGame(!runGame)}>
-                {runGame ? "Stop" : "Start"}
-            </button>
-        </>
+        <button onClick={() => onStartGame(!runGame)}>
+            {runGame ? "Stop" : "Start"}
+        </button>
     );
 
     return <div className={styles.buttons}>{activeButton}</div>;

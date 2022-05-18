@@ -21,24 +21,24 @@ const Field: FC<TypesProps> = ({
 }) => {
     const generateField = () => {
         const arrItems = [];
-        for (let i = 1; i <= FIELD_SIZE.columns; i++) {
-            for (let j = 1; j <= FIELD_SIZE.rows; j++) {
+        for (let i = 0; i < FIELD_SIZE.columns; i++) {
+            for (let j = 0; j < FIELD_SIZE.rows; j++) {
                 arrItems.push(
                     <div
                         className={classNames(styles.cells, {
                             [styles.cell_color__ship]:
-                                coordShips[`${i}_${j}`] !== undefined
-                                    ? coordShips[`${i}_${j}`]
+                                coordShips[`${i + 1}_${j + 1}`] !== undefined
+                                    ? coordShips[`${i + 1}_${j + 1}`]
                                     : false,
                             [styles.cell_color__hit]:
-                                stateCells[`${i}_${j}`] !== undefined &&
-                                stateCells[`${i}_${j}`],
+                                stateCells[`${i + 1}_${j + 1}`] !== undefined &&
+                                stateCells[`${i + 1}_${j + 1}`],
                             [styles.cell_color__miss]:
-                                stateCells[`${i}_${j}`] !== undefined &&
-                                !stateCells[`${i}_${j}`],
+                                stateCells[`${i + 1}_${j + 1}`] !== undefined &&
+                                !stateCells[`${i + 1}_${j + 1}`],
                         })}
-                        key={`${(i - 1) * FIELD_SIZE.columns + j}`}
-                        data-xy={`${i}_${j}`}
+                        key={`${i * FIELD_SIZE.columns + j + 1}`}
+                        data-xy={`${i + 1}_${j + 1}`}
                     ></div>,
                 );
             }

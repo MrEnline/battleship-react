@@ -1,7 +1,7 @@
 import { TypeCoord } from "../utils/Types";
 import { LimitsCoord } from "../utils/Types";
 
-export function generateRandomCoord(): TypeCoord {
+export function generateRandomCoord() {
     const y: number = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
     const x: number = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
     return { x, y };

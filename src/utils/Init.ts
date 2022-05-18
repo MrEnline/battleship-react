@@ -6,7 +6,7 @@ import { generateRandomCoord, generateRandomValue } from "./Functions";
 
 export const generateShips = () => {
     let ships: string[] = [];
-    let blockCells: string[] = [];
+    let blockCells: StateCellsProp = {};
     for (let i = 0; i < INITIAL_SHIPS.length; i++) {
         let count = INITIAL_SHIPS[i].count;
         while (count > 0) {
@@ -23,7 +23,7 @@ export const generateShips = () => {
                     newScheme,
                     blockCells,
                 );
-                if (coordShipOnField !== undefined) {
+                if (coordShipOnField) {
                     ships = [...ships, ...coordShipOnField];
                     const neighBorsShip = coordShipOnField.reduce(
                         (neighbors: Array<string>, coord: string) => {
@@ -35,7 +35,9 @@ export const generateShips = () => {
                         [],
                     );
                     const blockCellsSet = new Set(neighBorsShip);
-                    blockCellsSet.forEach((value) => blockCells.push(value));
+                    blockCellsSet.forEach(
+                        (value) => (blockCells[value] = true),
+                    );
                     break;
                 }
             }
@@ -52,7 +54,7 @@ function getCoordShipOnField(
     startCoord: TypeCoord,
     maxPosition: TypeCoord,
     newScheme: number[][],
-    blockCells: string[],
+    blockCells: StateCellsProp,
 ) {
     let coordShip: string[] = [];
     for (let y = 0; y <= maxPosition.y; y++) {
@@ -69,11 +71,9 @@ function getCoordShipOnField(
     return coordShip;
 }
 
-function isBlockCells(y: number, x: number, blockCells: string[]) {
+function isBlockCells(y: number, x: number, blockCells: StateCellsProp) {
     return (
-        y > FIELD_SIZE.columns ||
-        x > FIELD_SIZE.rows ||
-        blockCells.includes(`${y}_${x}`)
+        y > FIELD_SIZE.columns || x > FIELD_SIZE.rows || blockCells[`${y}_${x}`]
     );
 }
 
