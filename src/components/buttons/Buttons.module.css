@@ -1,12 +1,10 @@
 .buttons {
     display: flex;
-    width: 400px;
+    width: 250px;
     height: 30px;
     justify-content: space-around;
     align-items: center;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 10px auto 0 auto;
 }
 
 button {

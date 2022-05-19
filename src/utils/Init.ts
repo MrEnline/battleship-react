@@ -6,7 +6,7 @@ import { generateRandomCoord, generateRandomValue } from "./Functions";
 
 export const generateShips = () => {
     let ships: string[] = [];
-    let blockCells: StateCellsProp = {};
+    const blockCells: StateCellsProp = {};
     for (let i = 0; i < INITIAL_SHIPS.length; i++) {
         let count = INITIAL_SHIPS[i].count;
         while (count > 0) {
@@ -15,7 +15,7 @@ export const generateShips = () => {
                 y: newScheme.length - 1,
                 x: newScheme[0].length - 1,
             };
-            while (true) {
+            for (;;) {
                 const startCoord = generateRandomCoord();
                 const coordShipOnField = getCoordShipOnField(
                     startCoord,
@@ -56,7 +56,7 @@ function getCoordShipOnField(
     newScheme: number[][],
     blockCells: StateCellsProp,
 ) {
-    let coordShip: string[] = [];
+    const coordShip: string[] = [];
     for (let y = 0; y <= maxPosition.y; y++) {
         for (let x = 0; x <= maxPosition.x; x++) {
             if (!newScheme[y][x]) {

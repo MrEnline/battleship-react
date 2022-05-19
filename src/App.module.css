@@ -1,5 +1,12 @@
 .namegame {
     width: 400px;
     text-align: center;
-    margin: 200px auto 0 200px;
+    margin: 200px auto 0 auto;
+}
+
+.numbersteps {
+    text-align: center;
+    font-size: 20px;
+    width: 400px;
+    margin: 10px auto 0 auto;
 }

@@ -1,17 +1,40 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import styles from "./App.module.css";
 import Field from "../src/components/field/Field";
 import Buttons from "./components/buttons/Buttons";
-import CountSteps from "../src/components/countSteps/CountSteps";
 import { generateShips } from "../src/utils/Init";
 import { StateCellsProp } from "./utils/Types";
+import { useInterval } from "../src/components/hooks/useInterval";
+import { runNextStep } from "../src/utils/RunNextStep";
+import { DELAY } from "../src/utils/Constants";
 
 const App = () => {
     const [stateCells, setStateCells] = useState<StateCellsProp>({});
     const [runGame, setRunGame] = useState(false);
-    const [retryGame, setRetryGame] = useState(false);
+    const [endGame, setEndGame] = useState(false);
     const [coordShips, setCoordShips] = useState<StateCellsProp>(
         generateShips(),
+    );
+
+    const handleNextStep = () => {
+        setStateCells(runNextStep(stateCells, coordShips));
+    };
+
+    useInterval(handleNextStep, runGame ? DELAY : null);
+
+    const handleGenerateNewGame = useCallback(() => {
+        setEndGame(false);
+        setStateCells({});
+        setCoordShips(generateShips());
+    }, []);
+
+    const statusGame = !endGame ? (
+        <>Number of steps: {Object.keys(stateCells).length}</>
+    ) : (
+        <>
+            The game is over!!! Number of steps:
+            {Object.keys(stateCells).length}
+        </>
     );
 
     return (
@@ -20,20 +43,16 @@ const App = () => {
             <Buttons
                 runGame={runGame}
                 onStartGame={setRunGame}
-                stateCells={stateCells}
-                setStateCells={setStateCells}
-                coordShips={coordShips}
-                retryGame={retryGame}
-                onRetryGame={setRetryGame}
-                setCoordShips={setCoordShips}
+                endGame={endGame}
+                onGenerateNewGame={handleGenerateNewGame}
             />
-            <CountSteps stateCells={stateCells} />
+            <div className={styles.numbersteps}>{statusGame}</div>
             <Field
                 stateCells={stateCells}
-                coordShips={coordShips}
                 onRunGame={setRunGame}
-                retryGame={retryGame}
-                onRetryGame={setRetryGame}
+                endGame={endGame}
+                onEndGame={setEndGame}
+                coordShips={coordShips}
             />
         </div>
     );
