@@ -10,7 +10,8 @@ export interface TypeCoord {
 }
 
 export enum LimitsCoord {
-    Max = FIELD_SIZE.columns,
+    MaxY = FIELD_SIZE.columns,
+    MaxX = FIELD_SIZE.rows,
     Min = 1,
 }
 

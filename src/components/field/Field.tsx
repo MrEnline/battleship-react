@@ -1,65 +1,41 @@
-import { FC, useEffect } from "react";
+import React, { FC } from "react";
+import classNames from "classnames";
 import { FIELD_SIZE, CELL_SIZE } from "./../../utils/Constants";
 import styles from "./Field.module.css";
-import classNames from "classnames";
 import { StateCellsProp } from "../../utils/Types";
 
 interface TypesProps {
     stateCells: StateCellsProp;
-    onRunGame: (obj: boolean) => void;
-    endGame: boolean;
-    onEndGame: (obj: boolean) => void;
     coordShips: StateCellsProp;
 }
 
-const Field: FC<TypesProps> = ({
-    stateCells,
-    onRunGame,
-    endGame,
-    onEndGame,
-    coordShips,
-}) => {
+const Field: FC<TypesProps> = ({ stateCells, coordShips }) => {
+    const xy = (i: number, j: number) => {
+        return `${i + 1}_${j + 1}`;
+    };
+
     const generateField = () => {
         const arrItems = [];
-        for (let i = 0; i < FIELD_SIZE.columns; i++) {
-            for (let j = 0; j < FIELD_SIZE.rows; j++) {
-                const keyInCoordShips = `${i + 1}_${j + 1}` in coordShips;
-                const keyInStateCells = `${i + 1}_${j + 1}` in stateCells;
+        for (let i = 0; i < FIELD_SIZE.columns; i += 1) {
+            for (let j = 0; j < FIELD_SIZE.rows; j += 1) {
                 arrItems.push(
                     <div
                         className={classNames(styles.cells, {
-                            [styles.cell_color__ship]: keyInCoordShips
-                                ? coordShips[`${i + 1}_${j + 1}`]
-                                : false,
+                            [styles.cell_color__ship]: xy(i, j) in coordShips,
                             [styles.cell_color__hit]:
-                                keyInCoordShips &&
-                                stateCells[`${i + 1}_${j + 1}`],
+                                xy(i, j) in coordShips && stateCells[xy(i, j)],
                             [styles.cell_color__miss]:
-                                !keyInCoordShips && keyInStateCells,
+                                !(xy(i, j) in coordShips) &&
+                                xy(i, j) in stateCells,
                         })}
                         key={`${i * FIELD_SIZE.columns + j + 1}`}
-                        data-xy={`${i + 1}_${j + 1}`}
+                        data-xy={xy(i, j)}
                     ></div>,
                 );
             }
         }
         return arrItems;
     };
-
-    const handleCheckEndGame = () => {
-        const coordFireShips = Object.keys(stateCells).filter(
-            (value) => stateCells[value],
-        );
-        if (
-            Object.keys(coordShips).length === coordFireShips.length &&
-            !endGame
-        ) {
-            onRunGame(endGame);
-            onEndGame(true);
-        }
-    };
-
-    handleCheckEndGame();
 
     return (
         <div>

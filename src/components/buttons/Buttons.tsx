@@ -1,24 +1,25 @@
 import { FC } from "react";
 import styles from "./Buttons.module.css";
-import { StateCellsProp } from "../../utils/Types";
-import { generateShips } from "../../utils/Init";
 
 interface TypesProps {
     runGame: boolean;
     onStartGame: (runGame: boolean) => void;
-    endGame: boolean;
+    isEndGame: () => boolean;
     onGenerateNewGame: () => void;
 }
 
 const Buttons: FC<TypesProps> = ({
     runGame,
     onStartGame,
-    endGame,
+    isEndGame,
     onGenerateNewGame,
 }) => {
     return (
         <div className={styles.buttons}>
-            <button disabled={endGame} onClick={() => onStartGame(!runGame)}>
+            <button
+                disabled={isEndGame()}
+                onClick={() => onStartGame(!runGame)}
+            >
                 {runGame ? "Stop game" : "Start game"}
             </button>
             <button disabled={runGame} onClick={onGenerateNewGame}>

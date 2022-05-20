@@ -1,8 +1,9 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
+import classNames from "classnames";
 import styles from "./App.module.css";
-import Field from "../src/components/field/Field";
+import Field from "./components/field/Field";
 import Buttons from "./components/buttons/Buttons";
-import { generateShips } from "../src/utils/Init";
+import { generateShips } from "./src/utils/Init";
 import { StateCellsProp } from "./utils/Types";
 import { useInterval } from "../src/components/hooks/useInterval";
 import { runNextStep } from "../src/utils/RunNextStep";
@@ -11,24 +12,35 @@ import { DELAY } from "../src/utils/Constants";
 const App = () => {
     const [stateCells, setStateCells] = useState<StateCellsProp>({});
     const [runGame, setRunGame] = useState(false);
-    const [endGame, setEndGame] = useState(false);
     const [coordShips, setCoordShips] = useState<StateCellsProp>(
         generateShips(),
     );
 
+    const isEndGame = () => {
+        const coordFireShips = Object.keys(stateCells).filter(
+            (value) => stateCells[value],
+        );
+        if (Object.keys(coordShips).length === coordFireShips.length) {
+            return true;
+        }
+        return false;
+    };
+
     const handleNextStep = () => {
         setStateCells(runNextStep(stateCells, coordShips));
+        if (isEndGame()) {
+            setRunGame(false);
+        }
     };
 
     useInterval(handleNextStep, runGame ? DELAY : null);
 
     const handleGenerateNewGame = useCallback(() => {
-        setEndGame(false);
         setStateCells({});
         setCoordShips(generateShips());
     }, []);
 
-    const statusGame = !endGame ? (
+    const statusGame = !isEndGame() ? (
         <>Number of steps: {Object.keys(stateCells).length}</>
     ) : (
         <>
@@ -43,17 +55,17 @@ const App = () => {
             <Buttons
                 runGame={runGame}
                 onStartGame={setRunGame}
-                endGame={endGame}
+                isEndGame={isEndGame}
                 onGenerateNewGame={handleGenerateNewGame}
             />
-            <div className={styles.numbersteps}>{statusGame}</div>
-            <Field
-                stateCells={stateCells}
-                onRunGame={setRunGame}
-                endGame={endGame}
-                onEndGame={setEndGame}
-                coordShips={coordShips}
-            />
+            <div
+                className={classNames(styles.counter, {
+                    [styles.counter_endgame]: isEndGame(),
+                })}
+            >
+                {statusGame}
+            </div>
+            <Field stateCells={stateCells} coordShips={coordShips} />
         </div>
     );
 };

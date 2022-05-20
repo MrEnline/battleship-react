@@ -1,17 +1,17 @@
-import { StateCellsProp } from "../utils/Types";
+import { StateCellsProp, TypeCoord } from "../utils/Types";
 import { generateRandomCoord } from "./Functions";
 
 export const runNextStep = (
     stateCells: StateCellsProp,
     coordShips: StateCellsProp,
 ) => {
-    let newStateCells: StateCellsProp = { ...stateCells };
-    let coord = generateRandomCoord();
-    while (newStateCells[`${coord.y}_${coord.x}`] !== undefined) {
+    const newStateCells = { ...stateCells };
+    let coord: TypeCoord;
+    do {
         coord = generateRandomCoord();
-    }
-    newStateCells[`${coord.y}_${coord.x}`] =
-        coordShips[`${coord.y}_${coord.x}`] !== undefined ? true : false;
-
+    } while (`${coord.y}_${coord.x}` in newStateCells);
+    newStateCells[`${coord.y}_${coord.x}`] = coordShips[`${coord.y}_${coord.x}`]
+        ? true
+        : false;
     return newStateCells;
 };

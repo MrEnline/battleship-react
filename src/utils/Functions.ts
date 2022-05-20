@@ -1,12 +1,15 @@
-import { TypeCoord } from "../utils/Types";
 import { LimitsCoord } from "../utils/Types";
 
-export function generateRandomCoord() {
-    const y: number = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
-    const x: number = generateRandomValue(LimitsCoord.Max, LimitsCoord.Min);
+export const generateRandomCoord = () => {
+    const y: number = generateRandomValue(LimitsCoord.MaxY, LimitsCoord.Min);
+    const x: number = generateRandomValue(LimitsCoord.MaxX, LimitsCoord.Min);
     return { x, y };
-}
+};
 
-export function generateRandomValue(max: number, min: number) {
+export const generateRandomBool = () => {
+    return Boolean(Math.round(Math.random()));
+};
+
+const generateRandomValue = (max: number, min: number) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
