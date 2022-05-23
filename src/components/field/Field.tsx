@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { FIELD_SIZE, CELL_SIZE } from "./../../utils/Constants";
 import styles from "./Field.module.css";
+import { FIELD_SIZE, CELL_SIZE } from "../../utils/Constants";
 import { StateCellsProp } from "../../utils/Types";
 
 interface TypesProps {
@@ -21,10 +21,10 @@ const Field: FC<TypesProps> = ({ stateCells, coordShips }) => {
                 arrItems.push(
                     <div
                         className={classNames(styles.cells, {
-                            [styles.cell_color__ship]: xy(i, j) in coordShips,
-                            [styles.cell_color__hit]:
+                            [styles.cellship]: xy(i, j) in coordShips,
+                            [styles.cellship_hit]:
                                 xy(i, j) in coordShips && stateCells[xy(i, j)],
-                            [styles.cell_color__miss]:
+                            [styles.cellship_miss]:
                                 !(xy(i, j) in coordShips) &&
                                 xy(i, j) in stateCells,
                         })}

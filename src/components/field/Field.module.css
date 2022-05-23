@@ -13,14 +13,14 @@
     margin: auto;
 }
 
-.cell_color__ship {
+.cellship {
     background-color: rgba(38, 235, 21, 0.932);
 }
 
-.cell_color__hit {
+.cellship_hit {
     background-color: rgba(238, 103, 13, 0.932);
 }
 
-.cell_color__miss {
+.cellship_miss {
     background-color: rgba(194, 202, 228, 0.932);
 }

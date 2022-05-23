@@ -7,11 +7,6 @@
     margin: 10px auto 0 auto;
 }
 
-button {
+.button {
     font-size: 20px;
-}
-
-.resultgame {
-    font-size: 20px;
-    font-weight: bold;
 }

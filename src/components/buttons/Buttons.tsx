@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import styles from "./Buttons.module.css";
 
 interface TypesProps {
@@ -17,12 +17,17 @@ const Buttons: FC<TypesProps> = ({
     return (
         <div className={styles.buttons}>
             <button
+                className={styles.button}
                 disabled={isEndGame()}
                 onClick={() => onStartGame(!runGame)}
             >
                 {runGame ? "Stop game" : "Start game"}
             </button>
-            <button disabled={runGame} onClick={onGenerateNewGame}>
+            <button
+                className={styles.button}
+                disabled={runGame}
+                onClick={onGenerateNewGame}
+            >
                 Retry game
             </button>
         </div>

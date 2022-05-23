@@ -3,79 +3,6 @@ import { StateCellsProp } from "../utils/Types";
 import { TypeCoord } from "../utils/Types";
 import { generateRandomCoord, generateRandomBool } from "./Functions";
 
-export const generateShips = () => {
-    let ships: string[] = [];
-    const blockCells: StateCellsProp = {};
-    for (let i = 0; i < INITIAL_SHIPS.length; i++) {
-        let count = INITIAL_SHIPS[i].count;
-        while (count > 0) {
-            const newScheme = generateRandomScheme(INITIAL_SHIPS[i].scheme);
-            const maxPosition = {
-                y: newScheme.length - 1,
-                x: newScheme[0].length - 1,
-            };
-            for (;;) {
-                const startCoord = generateRandomCoord();
-                const coordShipOnField = getCoordShipOnField(
-                    startCoord,
-                    maxPosition,
-                    newScheme,
-                    blockCells,
-                );
-                if (coordShipOnField) {
-                    ships = [...ships, ...coordShipOnField];
-                    const neighBorsShip = coordShipOnField.reduce(
-                        (neighbors: string[], coord: string) => {
-                            return [
-                                ...neighbors,
-                                ...getNeighbors(parseCoordinates(coord)),
-                            ];
-                        },
-                        [],
-                    );
-                    const blockCellsSet = new Set(neighBorsShip);
-                    blockCellsSet.forEach(
-                        (value) => (blockCells[value] = true),
-                    );
-                    break;
-                }
-            }
-            count--;
-        }
-    }
-    return ships.reduce((accum: StateCellsProp, currValue: string) => {
-        accum[currValue] = true;
-        return accum;
-    }, {} as StateCellsProp);
-};
-
-const getCoordShipOnField = (
-    startCoord: TypeCoord,
-    maxPosition: TypeCoord,
-    newScheme: number[][],
-    blockCells: StateCellsProp,
-) => {
-    const coordShip: string[] = [];
-    for (let y = 0; y <= maxPosition.y; y++) {
-        for (let x = 0; x <= maxPosition.x; x++) {
-            if (!newScheme[y][x]) {
-                continue;
-            }
-            if (isBlockCells(startCoord.y + y, startCoord.x + x, blockCells)) {
-                return;
-            }
-            coordShip.push(`${startCoord.y + y}_${startCoord.x + x}`);
-        }
-    }
-    return coordShip;
-};
-
-const isBlockCells = (y: number, x: number, blockCells: StateCellsProp) => {
-    return (
-        y > FIELD_SIZE.columns || x > FIELD_SIZE.rows || blockCells[`${y}_${x}`]
-    );
-};
-
 const generateRandomScheme = (scheme: number[][]) => {
     const newScheme = generateRandomBool()
         ? scheme
@@ -90,6 +17,33 @@ const generateRandomScheme = (scheme: number[][]) => {
         newScheme.forEach((value) => value.reverse());
     }
     return newScheme;
+};
+
+const isBlockCells = (y: number, x: number, blockCells: StateCellsProp) => {
+    return (
+        y > FIELD_SIZE.columns || x > FIELD_SIZE.rows || blockCells[`${y}_${x}`]
+    );
+};
+
+const getCoordShipOnField = (
+    startCoord: TypeCoord,
+    maxPosition: TypeCoord,
+    newScheme: number[][],
+    blockCells: StateCellsProp,
+) => {
+    const coordShip: string[] = [];
+    for (let y = 0; y <= maxPosition.y; y += 1) {
+        for (let x = 0; x <= maxPosition.x; x += 1) {
+            if (!newScheme[y][x]) {
+                continue;
+            }
+            if (isBlockCells(startCoord.y + y, startCoord.x + x, blockCells)) {
+                return;
+            }
+            coordShip.push(`${startCoord.y + y}_${startCoord.x + x}`);
+        }
+    }
+    return coordShip;
 };
 
 const getNeighbors = (coord: TypeCoord) => {
@@ -117,4 +71,51 @@ const parseCoordinates = (xy: string) => {
     const y: number = +xy.split("_")[0];
     const x: number = +xy.split("_")[1];
     return { x, y };
+};
+
+// eslint-disable-next-line import/prefer-default-export
+export const generateShips = () => {
+    let ships: string[] = [];
+    const blockCells: StateCellsProp = {};
+    for (let i = 0; i < INITIAL_SHIPS.length; i += 1) {
+        let { count } = INITIAL_SHIPS[i];
+        while (count > 0) {
+            const newScheme = generateRandomScheme(INITIAL_SHIPS[i].scheme);
+            const maxPosition = {
+                y: newScheme.length - 1,
+                x: newScheme[0].length - 1,
+            };
+            for (;;) {
+                const startCoord = generateRandomCoord();
+                const coordShipOnField = getCoordShipOnField(
+                    startCoord,
+                    maxPosition,
+                    newScheme,
+                    blockCells,
+                );
+                if (coordShipOnField) {
+                    ships = [...ships, ...coordShipOnField];
+                    const neighBorsShip = coordShipOnField.reduce(
+                        (neighbors: string[], coord: string) => {
+                            return [
+                                ...neighbors,
+                                ...getNeighbors(parseCoordinates(coord)),
+                            ];
+                        },
+                        [],
+                    );
+                    const blockCellsSet = new Set(neighBorsShip).values();
+                    while (blockCellsSet.next().value) {
+                        blockCells[blockCellsSet.next().value] = true;
+                    }
+                    break;
+                }
+            }
+            count -= 1;
+        }
+    }
+    return ships.reduce((accum: StateCellsProp, currValue: string) => {
+        accum[currValue] = true;
+        return accum;
+    }, {} as StateCellsProp);
 };
