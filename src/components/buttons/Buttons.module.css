@@ -1,4 +1,4 @@
-.buttons {
+.control {
     display: flex;
     width: 250px;
     height: 30px;
@@ -7,6 +7,6 @@
     margin: 10px auto 0 auto;
 }
 
-.button {
+.control__button {
     font-size: 20px;
 }

@@ -21,10 +21,10 @@ const Field: FC<TypesProps> = ({ stateCells, coordShips }) => {
                 arrItems.push(
                     <div
                         className={classNames(styles.cells, {
-                            [styles.cellship]: xy(i, j) in coordShips,
-                            [styles.cellship_hit]:
+                            [styles.cells__ship]: xy(i, j) in coordShips,
+                            [styles.cells__ship_hit]:
                                 xy(i, j) in coordShips && stateCells[xy(i, j)],
-                            [styles.cellship_miss]:
+                            [styles.cells__ship_miss]:
                                 !(xy(i, j) in coordShips) &&
                                 xy(i, j) in stateCells,
                         })}
