@@ -1,6 +1,5 @@
 import { FIELD_SIZE, INITIAL_SHIPS } from "./Constants";
-import { StateCellsProp } from "../utils/Types";
-import { TypeCoord } from "../utils/Types";
+import { StateCellsProp, TypeCoord } from "./Types";
 import { generateRandomCoord, generateRandomBool } from "./Functions";
 
 const generateRandomScheme = (scheme: number[][]) => {
@@ -38,7 +37,7 @@ const getCoordShipOnField = (
                 continue;
             }
             if (isBlockCells(startCoord.y + y, startCoord.x + x, blockCells)) {
-                return;
+                return undefined;
             }
             coordShip.push(`${startCoord.y + y}_${startCoord.x + x}`);
         }
@@ -73,8 +72,7 @@ const parseCoordinates = (xy: string) => {
     return { x, y };
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export const generateShips = () => {
+const generateShips = () => {
     let ships: string[] = [];
     const blockCells: StateCellsProp = {};
     for (let i = 0; i < INITIAL_SHIPS.length; i += 1) {
@@ -104,10 +102,10 @@ export const generateShips = () => {
                         },
                         [],
                     );
-                    const blockCellsSet = new Set(neighBorsShip).values();
-                    while (blockCellsSet.next().value) {
-                        blockCells[blockCellsSet.next().value] = true;
-                    }
+                    const blockCellsSet = new Set(neighBorsShip);
+                    blockCellsSet.forEach((key) => {
+                        blockCells[key] = true;
+                    });
                     break;
                 }
             }
@@ -119,3 +117,5 @@ export const generateShips = () => {
         return accum;
     }, {} as StateCellsProp);
 };
+
+export default generateShips;

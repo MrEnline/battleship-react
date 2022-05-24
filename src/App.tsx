@@ -3,11 +3,11 @@ import classNames from "classnames";
 import styles from "./App.module.css";
 import Field from "./components/field/Field";
 import Buttons from "./components/buttons/Buttons";
-import { generateShips } from "../src/utils/Init";
+import generateShips from "./utils/Init";
 import { StateCellsProp } from "./utils/Types";
-import { useInterval } from "./utils/hooks/useInterval";
-import { runNextStep } from "../src/utils/RunNextStep";
-import { DELAY } from "../src/utils/Constants";
+import useInterval from "./utils/hooks/useInterval";
+import runNextStep from "./utils/RunNextStep";
+import { DELAY } from "./utils/Constants";
 
 const App = () => {
     const [stateCells, setStateCells] = useState<StateCellsProp>({});

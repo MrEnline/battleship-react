@@ -1,4 +1,8 @@
-import { LimitsCoord } from "../utils/Types";
+import { LimitsCoord } from "./Types";
+
+const generateRandomValue = (max: number, min: number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 
 export const generateRandomCoord = () => {
     const y: number = generateRandomValue(LimitsCoord.MaxY, LimitsCoord.Min);
@@ -8,8 +12,4 @@ export const generateRandomCoord = () => {
 
 export const generateRandomBool = () => {
     return Boolean(Math.round(Math.random()));
-};
-
-const generateRandomValue = (max: number, min: number) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
 };
