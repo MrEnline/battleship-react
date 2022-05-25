@@ -38,13 +38,11 @@ const Field: FC<TypesProps> = ({ stateCells, coordShips }) => {
     };
 
     return (
-        <div>
-            <div
-                className={styles.field}
-                style={{ width: FIELD_SIZE.columns * CELL_SIZE }}
-            >
-                {generateField()}
-            </div>
+        <div
+            className={styles.field}
+            style={{ width: FIELD_SIZE.columns * CELL_SIZE }}
+        >
+            {generateField()}
         </div>
     );
 };

@@ -15,16 +15,16 @@ const Buttons: FC<TypesProps> = ({
     onGenerateNewGame,
 }) => {
     return (
-        <div className={styles.control}>
+        <div className={styles.wrapper__buttons}>
             <button
-                className={styles.control__button}
+                className={styles.buttons__button}
                 disabled={isEndGame()}
                 onClick={() => onStartGame(!runGame)}
             >
                 {runGame ? "Stop game" : "Start game"}
             </button>
             <button
-                className={styles.control__button}
+                className={styles.buttons__button}
                 disabled={runGame}
                 onClick={onGenerateNewGame}
             >

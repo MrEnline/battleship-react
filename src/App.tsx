@@ -16,7 +16,7 @@ const App = () => {
         generateShips(),
     );
 
-    const isEndGame = () => {
+    const isEndGame = useCallback(() => {
         const coordFireShips = Object.keys(stateCells).filter(
             (value) => stateCells[value],
         );
@@ -24,7 +24,7 @@ const App = () => {
             return true;
         }
         return false;
-    };
+    }, [stateCells, coordShips]);
 
     const handleNextStep = () => {
         setStateCells(runNextStep(stateCells, coordShips));
@@ -50,8 +50,8 @@ const App = () => {
     );
 
     return (
-        <div>
-            <h1 className={styles.namegame}>Battleship</h1>;
+        <div className={styles.wrapper}>
+            <h1 className={styles.wrapper__title}>Battleship</h1>;
             <Buttons
                 runGame={runGame}
                 onStartGame={setRunGame}
@@ -59,8 +59,8 @@ const App = () => {
                 onGenerateNewGame={handleGenerateNewGame}
             />
             <div
-                className={classNames(styles.counter, {
-                    [styles.counter_endgame]: isEndGame(),
+                className={classNames(styles.wrapper__counter, {
+                    [styles.wrapper__counter_endgame]: isEndGame(),
                 })}
             >
                 {statusGame}

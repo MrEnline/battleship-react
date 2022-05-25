@@ -9,13 +9,13 @@ const generateRandomScheme = (scheme: number[][]) => {
     if (newScheme.length === 1) {
         return newScheme;
     }
-    if (generateRandomBool()) {
-        newScheme.reverse();
-    }
-    if (generateRandomBool()) {
-        newScheme.forEach((value) => value.reverse());
-    }
-    return newScheme;
+    const reverseNewScheme = generateRandomBool()
+        ? newScheme.reverse()
+        : newScheme;
+    const reverseAllElemNewScheme = generateRandomBool()
+        ? reverseNewScheme.map((value) => value.reverse())
+        : reverseNewScheme;
+    return reverseAllElemNewScheme;
 };
 
 const isBlockCells = (y: number, x: number, blockCells: StateCellsProp) => {
