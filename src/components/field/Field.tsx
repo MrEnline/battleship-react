@@ -20,11 +20,11 @@ const Field: FC<TypesProps> = ({ stateCells, coordShips }) => {
             for (let j = 0; j < FIELD_SIZE.rows; j += 1) {
                 arrItems.push(
                     <div
-                        className={classNames(styles.cells, {
-                            [styles.cells__ship]: xy(i, j) in coordShips,
-                            [styles.cells__ship_hit]:
+                        className={classNames(styles.field__cells, {
+                            [styles.field__cells_ship]: xy(i, j) in coordShips,
+                            [styles.field__cells_hit]:
                                 xy(i, j) in coordShips && stateCells[xy(i, j)],
-                            [styles.cells__ship_miss]:
+                            [styles.field__cells_miss]:
                                 !(xy(i, j) in coordShips) &&
                                 xy(i, j) in stateCells,
                         })}
@@ -39,7 +39,7 @@ const Field: FC<TypesProps> = ({ stateCells, coordShips }) => {
 
     return (
         <div
-            className={styles.field}
+            className={styles.wrapper__field}
             style={{ width: FIELD_SIZE.columns * CELL_SIZE }}
         >
             {generateField()}

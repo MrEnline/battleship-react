@@ -1,4 +1,4 @@
-.field {
+.wrapper__field {
     display: flex;
     flex-wrap: wrap;
     margin-left: auto;
@@ -6,21 +6,21 @@
     margin-top: 20px;
 }
 
-.cells {
+.field__cells {
     border: 1px solid grey;
     width: 38px;
     height: 38px;
     margin: auto;
 }
 
-.cells__ship {
+.field__cells_ship {
     background-color: rgba(38, 235, 21, 0.932);
 }
 
-.cells__ship_hit {
+.field__cells_hit {
     background-color: rgba(238, 103, 13, 0.932);
 }
 
-.cells__ship_miss {
+.field__cells_miss {
     background-color: rgba(194, 202, 228, 0.932);
 }
